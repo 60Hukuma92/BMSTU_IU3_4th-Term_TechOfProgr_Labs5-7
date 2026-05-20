@@ -8,4 +8,7 @@ data class Creature(
     val dailyExpenses: Double,
     val adoptionCost: Double,
     val magicalAbilities: List<String>
-)
+){
+    override fun toString(): String =
+        "[$id] $name ($species) - $temperament. Daily: $dailyExpenses. Cost: $adoptionCost. Skills: ${magicalAbilities.joinToString()}"
+}
