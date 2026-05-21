@@ -8,7 +8,13 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-object AppModule {
+class AppModule(private val context: Context) {
+
+    @Provides
+    @Singleton
+    fun provideContext(): Context { // Теперь Даггер знает, где брать Context
+        return context
+    }
 
     @Provides
     @Singleton
@@ -18,10 +24,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCreatureRepository(
-        context: Context,
-        csvFileName: String
-    ): CreatureRepository {
-        return CreatureRepositoryImpl(context, csvFileName)
+    fun provideCreatureRepository(context: Context): CreatureRepository {
+        return CreatureRepositoryImpl(context)
     }
 }
