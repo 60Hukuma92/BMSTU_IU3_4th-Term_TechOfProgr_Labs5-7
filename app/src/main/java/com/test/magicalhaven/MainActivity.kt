@@ -4,44 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.test.magicalhaven.ui.theme.MagicalHavenTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import com.test.magicalhaven.ui.screen.ShelterScreen
+import com.test.magicalhaven.ui.viewmodel.ShelterViewModel
+import javax.inject.Inject
+
 
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var viewModel: ShelterViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as MagicalHavenApp).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MagicalHavenTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            MaterialTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    ShelterScreen(viewModel)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MagicalHavenTheme {
-        Greeting("Android")
     }
 }
