@@ -1,11 +1,13 @@
 package com.test.magicalhaven.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.test.magicalhaven.data.repository.CreatureRepository
 import com.test.magicalhaven.ui.state.ShelterUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShelterViewModel @Inject constructor(
@@ -19,30 +21,45 @@ class ShelterViewModel @Inject constructor(
     }
 
     fun loadCatalog() {
-        val creatures = repo.getAllCreatures()
-        _uiState.value = ShelterUiState.Catalog(creatures)
+        viewModelScope.launch {
+            _uiState.value = ShelterUiState.Loading
+            val creatures = repo.getAllCreatures()
+            _uiState.value = ShelterUiState.Catalog(creatures)
+        }
     }
 
     fun attemptBinding(visitorName: String, budget: Double, creatureId: String) {
-        val creature = repo.getCreatureById(creatureId)
-        if (creature == null) {
-            _uiState.value = ShelterUiState.Error("Creature not found")
-            return
-        }
+        viewModelScope.launch {
+            val creature = repo.getCreatureById(creatureId)
+            if (creature == null) {
+                _uiState.value = ShelterUiState.Error("Creature not found")
+                return@launch
+            }
 
-        if (budget >= creature.dailyExpenses) {
-            repo.removeCreatureById(creatureId)
-            _uiState.value = ShelterUiState.Success("Contract signed for ${creature.name}!")
-        } else {
-            _uiState.value = ShelterUiState.Error("Insufficient budget: ${creature.dailyExpenses} gold required")
+            if (budget >= creature.dailyExpenses) {
+                val success = repo.removeCreatureById(creatureId)
+                if (success) {
+                    _uiState.value = ShelterUiState.Success("Contract signed for ${creature.name}!")
+                } else {
+                    _uiState.value = ShelterUiState.Error("Failed to adopt creature on server")
+                }
+            } else {
+                _uiState.value = ShelterUiState.Error("Insufficient budget: ${creature.dailyExpenses} gold required")
+            }
         }
     }
 
     fun showStatistics() {
-        _uiState.value = ShelterUiState.Statistics(
-            total = repo.getAvailableCount(),
-            adopted = repo.getAdoptedCount(),
-            popular = repo.getMostPopularSpecies()
-        )
+        viewModelScope.launch {
+            _uiState.value = ShelterUiState.Loading
+            val total = repo.getAvailableCount()
+            val adopted = repo.getAdoptedCount()
+            val popular = repo.getMostPopularSpecies()
+            _uiState.value = ShelterUiState.Statistics(
+                total = total,
+                adopted = adopted,
+                popular = popular
+            )
+        }
     }
 }

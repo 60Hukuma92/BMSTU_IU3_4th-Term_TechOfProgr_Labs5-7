@@ -18,38 +18,45 @@ class CreatureService(
     }
 
     private fun loadData() {
-        val resource = resourceLoader.getResource("classpath:\$csvPath")
+        val fullPath = if (csvPath.startsWith("classpath:")) csvPath else "classpath:$csvPath"
+        val resource = resourceLoader.getResource(fullPath)
+        
         if (resource.exists()) {
             resource.inputStream.bufferedReader().useLines { lines ->
                 lines.drop(1).forEach { line ->
-                    // Simple CSV parsing (considering quotes for abilities)
+                    if (line.isBlank()) return@forEach
                     val regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)".toRegex()
                     val parts = line.split(regex)
                     if (parts.size >= 8) {
-                        val rawAbilities = parts[6].trim()
-                        val cleanAbilities = if (rawAbilities.startsWith("\"") && rawAbilities.endsWith("\"")) {
-                            rawAbilities.substring(1, rawAbilities.length - 1)
-                        } else {
-                            rawAbilities
-                        }
+                        try {
+                            val rawAbilities = parts[6].trim()
+                            val cleanAbilities = if (rawAbilities.startsWith("\"") && rawAbilities.endsWith("\"")) {
+                                rawAbilities.substring(1, rawAbilities.length - 1)
+                            } else {
+                                rawAbilities
+                            }
 
-                        creatures.add(
-                            Creature(
-                                id = parts[0].toLong(),
-                                name = parts[1],
-                                species = parts[2],
-                                temperament = parts[3],
-                                dailyExpenses = parts[4].toDouble(),
-                                adoptionCost = parts[5].toDouble(),
-                                magicalAbilities = cleanAbilities.split(",").map { it.trim() },
-                                isAdopted = parts[7].toBoolean()
+                            creatures.add(
+                                Creature(
+                                    id = parts[0].trim().toLong(),
+                                    name = parts[1].trim(),
+                                    species = parts[2].trim(),
+                                    temperament = parts[3].trim(),
+                                    dailyExpenses = parts[4].trim().toDouble(),
+                                    adoptionCost = parts[5].trim().toDouble(),
+                                    magicalAbilities = cleanAbilities.split(",").map { it.trim() },
+                                    isAdopted = parts[7].trim().toBoolean()
+                                )
                             )
-                        )
+                        } catch (e: Exception) {
+                            println("Error parsing CSV line: $line. Error: ${e.message}")
+                        }
                     }
                 }
             }
+            println("Successfully loaded ${creatures.size} creatures from $fullPath")
         } else {
-            println("Warning: CSV resource not found at classpath:\$csvPath")
+            println("CRITICAL ERROR: CSV resource not found at $fullPath")
         }
     }
 

@@ -3,16 +3,10 @@ package com.test.magicalhaven.data.repository
 import com.test.magicalhaven.domain.model.Creature
 
 interface CreatureRepository {
-    fun getAllCreatures(): List<Creature>
-
-    fun getCreatureById(id: String): Creature?
-
-    fun removeCreatureById(id: String): Boolean
-
-
-    fun getAvailableCount(): Int
-
-    fun getAdoptedCount(): Int
-
-    fun getMostPopularSpecies(): String?
+    suspend fun getAllCreatures(): List<Creature>
+    suspend fun getCreatureById(id: String): Creature?
+    suspend fun removeCreatureById(id: String): Boolean
+    suspend fun getAvailableCount(): Int
+    suspend fun getAdoptedCount(): Int
+    suspend fun getMostPopularSpecies(): String?
 }

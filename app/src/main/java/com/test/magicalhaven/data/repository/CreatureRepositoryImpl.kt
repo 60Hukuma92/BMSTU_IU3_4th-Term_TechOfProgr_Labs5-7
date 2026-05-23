@@ -3,6 +3,8 @@ package com.test.magicalhaven.data.repository
 import android.content.Context
 import com.test.magicalhaven.R
 import com.test.magicalhaven.domain.model.Creature
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -24,7 +26,6 @@ class CreatureRepositoryImpl(
 
             reader.useLines { lines ->
                 lines.drop(1).forEach { line ->
-                    // Используем limit = 7, чтобы не разбивать способности внутри кавычек
                     val fields = line.split(",", limit = 7)
                     if (fields.size == 7) {
                         val rawAbilities = fields[6].trim()
@@ -53,23 +54,31 @@ class CreatureRepositoryImpl(
         }
     }
 
-    override fun getAllCreatures(): List<Creature> = creatures
-
-    override fun getCreatureById(id: String): Creature? = creatures.find { it.id == id }
-
-    override fun removeCreatureById(id: String): Boolean {
-        val removed = creatures.removeIf { it.id == id }
-        if (removed) adoptedCount++
-        return removed
+    override suspend fun getAllCreatures(): List<Creature> = withContext(Dispatchers.IO) {
+        creatures
     }
 
-    override fun getAvailableCount(): Int = creatures.size
+    override suspend fun getCreatureById(id: String): Creature? = withContext(Dispatchers.IO) {
+        creatures.find { it.id == id }
+    }
 
-    override fun getAdoptedCount(): Int = adoptedCount
+    override suspend fun removeCreatureById(id: String): Boolean = withContext(Dispatchers.IO) {
+        val removed = creatures.removeIf { it.id == id }
+        if (removed) adoptedCount++
+        removed
+    }
 
-    override fun getMostPopularSpecies(): String? {
-        if (creatures.isEmpty()) return null
-        return creatures.groupBy { it.species }
+    override suspend fun getAvailableCount(): Int = withContext(Dispatchers.IO) {
+        creatures.size
+    }
+
+    override suspend fun getAdoptedCount(): Int = withContext(Dispatchers.IO) {
+        adoptedCount
+    }
+
+    override suspend fun getMostPopularSpecies(): String? = withContext(Dispatchers.IO) {
+        if (creatures.isEmpty()) return@withContext null
+        creatures.groupBy { it.species }
             .maxByOrNull { it.value.size }?.key
     }
 }

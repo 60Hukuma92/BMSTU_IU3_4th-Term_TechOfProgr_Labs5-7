@@ -1,5 +1,16 @@
 id,name,species,temperament,dailyExpenses,adoptionCost,magicalAbilities,isAdopted
-1,Fluffy,Dragon,Fiery,100.5,500.0,"Fire Breathing, Flying",false
-2,Sparky,Unicorn,Gentle,50.0,300.0,"Healing Horn, Rainbow Trail",false
-3,Shadow,Direwolf,Loyal,75.0,400.0,"Night Vision, Stealth",true
-4,Phoenix,Phoenix,Noble,200.0,1000.0,"Rebirth, Fire Control",false
+1,Firewing,Phoenix,Calm,120.5,2500.0,"Healing, Rebirth,Flight",false
+2,Shadow,Thestral,Introverted,45.0,1200.0,"Invisibility,Flight",false
+3,Glitter,Unicorn,Friendly,60.0,3000.0,"Purification,Light",false
+4,Rocky,Hippogriff,Proud,85.0,1800.0,"Strength,Flight",false
+5,Bubbles,Kelpie,Mischievous,30.0,900.0,"Shape-shifting,Water Breathing",false
+6,Sparky,Dragon,Energetic,250.0,7000.0,"Fire Breathing,Flight",false
+7,Misty,Niffler,Greedy,15.0,500.0,"Treasure Hunting",false
+8,Bolt,Thunderbird,Brave,150.0,4500.0,"Weather Control,Flight",false
+9,Luna,Mooncalf,Shy,10.0,350.0,"Moonlight Dancing",false
+10,Grog,Troll,Stubborn,40.0,800.0,"Super Strength",false
+11,Fang,Basilisk,Dangerous,300.0,12000.0,"Petrification,Venom",false
+12,Silver,Pegasus,Noble,95.0,3800.0,"Flight,Speed",false
+13,Goldie,Leprechaun,Tricky,25.0,1500.0,"Illusion,Luck",false
+14,Thorne,Manticore,Aggressive,180.0,6500.0,"Venomous Sting,Strength",false
+15,Aqua,Siren,Charming,75.0,2800.0,"Hypnotic Song,Swimming",false
