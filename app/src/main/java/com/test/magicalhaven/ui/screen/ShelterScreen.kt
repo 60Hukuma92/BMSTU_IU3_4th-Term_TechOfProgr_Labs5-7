@@ -1,11 +1,8 @@
 package com.test.magicalhaven.ui.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -17,7 +14,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +28,6 @@ fun ShelterScreen(viewModel: ShelterViewModel) {
     val state by viewModel.uiState.collectAsState()
     var visitorName by remember { mutableStateOf("") }
     var budget by remember { mutableStateOf("") }
-    var creatureId by remember { mutableStateOf("") }
 
     Column(modifier = Modifier
         .padding(16.dp)
@@ -43,11 +38,7 @@ fun ShelterScreen(viewModel: ShelterViewModel) {
         TextField(value = visitorName, onValueChange = { visitorName = it }, label = { Text("Visitor Name") })
         TextField(value = budget, onValueChange = { budget = it }, label = { Text("Monthly Budget") })
 
-        Row {
-            Button(onClick = { viewModel.loadCatalog() }) { Text("Catalog") }
-            Spacer(Modifier.width(8.dp))
-            Button(onClick = { viewModel.showStatistics() }) { Text("Stats") }
-        }
+        Button(onClick = { viewModel.showStatistics() }) { Text("Stats") }
 
         HorizontalDivider(
             Modifier.padding(vertical = 8.dp),

@@ -1,0 +1,5 @@
+id,name,species,temperament,dailyExpenses,adoptionCost,magicalAbilities,isAdopted
+1,Fluffy,Dragon,Fiery,100.5,500.0,"Fire Breathing, Flying",false
+2,Sparky,Unicorn,Gentle,50.0,300.0,"Healing Horn, Rainbow Trail",false
+3,Shadow,Direwolf,Loyal,75.0,400.0,"Night Vision, Stealth",true
+4,Phoenix,Phoenix,Noble,200.0,1000.0,"Rebirth, Fire Control",false

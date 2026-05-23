@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Magical Haven"
 include(":app")
- 
+include(":server")

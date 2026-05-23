@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="/build.gradle (snapshot).kts">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="/build.gradle (snapshot).kts" />
+              <option name="updatedContent" value="plugins {&#10;    id(&quot;org.springframework.boot&quot;) version &quot;3.2.4&quot;&#10;    id(&quot;io.spring.dependency-management&quot;) version &quot;1.1.4&quot;&#10;    kotlin(&quot;jvm&quot;) version &quot;1.9.23&quot;&#10;    kotlin(&quot;plugin.spring&quot;) version &quot;1.9.23&quot;&#10;}&#10;&#10;group = &quot;com.test.magicalhaven&quot;&#10;version = &quot;0.0.1-SNAPSHOT&quot;&#10;java {&#10;    sourceCompatibility = JavaVersion.VERSION_21&#10;}&#10;&#10;repositories {&#10;    mavenCentral()&#10;}&#10;&#10;dependencies {&#10;    implementation(&quot;org.springframework.boot:spring-boot-starter-web&quot;)&#10;    implementation(&quot;org.springframework.boot:spring-boot-starter-aop&quot;)&#10;    implementation(&quot;com.fasterxml.jackson.module:jackson-module-kotlin&quot;)&#10;    implementation(&quot;org.jetbrains.kotlin:kotlin-reflect&quot;)&#10;    implementation(&quot;org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0&quot;)&#10;    testImplementation(&quot;org.springframework.boot:spring-boot-starter-test&quot;)&#10;}&#10;&#10;tasks.withType&lt;Test&gt; {&#10;    useJUnitPlatform()&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
