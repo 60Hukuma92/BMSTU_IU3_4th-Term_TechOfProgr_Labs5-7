@@ -16,7 +16,7 @@ class AuditService {
             role = role
         )
         logs.add(log)
-        println("AUDIT: user with role [\$role] executed action: \$action")
+        println("AUDIT: user with role [$role] executed action: $action")
     }
 
     fun getAllLogs(): List<ActionLog> = logs.toList()

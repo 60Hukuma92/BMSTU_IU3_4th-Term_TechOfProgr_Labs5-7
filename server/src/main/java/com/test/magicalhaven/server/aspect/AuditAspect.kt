@@ -19,8 +19,12 @@ class AuditAspect(private val auditService: AuditService) {
         val request: HttpServletRequest? = requestAttributes?.request
 
         val userRole = request?.getHeader("X-Role") ?: "USER"
-        val methodName = joinPoint.signature.name
+        val action = if (request != null) {
+            "${request.method} ${request.requestURI}"
+        } else {
+            joinPoint.signature.name
+        }
 
-        auditService.logAction(methodName, userRole)
+        auditService.logAction(action, userRole)
     }
 }

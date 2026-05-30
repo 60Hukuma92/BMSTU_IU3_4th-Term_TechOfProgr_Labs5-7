@@ -3,4 +3,11 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="21" />
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Magical_Haven.server" options="-parameters" />
+      <module name="Magical_Haven.server.main" options="-parameters" />
+      <module name="Magical_Haven.server.test" options="-parameters" />
+    </option>
+  </component>
 </project>
