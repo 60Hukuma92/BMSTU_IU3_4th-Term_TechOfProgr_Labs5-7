@@ -1,10 +1,11 @@
 package com.test.magicalhaven.server.repository
 
 import com.test.magicalhaven.server.repository.entity.CreatureEntity
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
-interface CreatureRepository {
-    fun getAll(): List<CreatureEntity>
-    fun findById(id: Long): CreatureEntity?
-    fun update(creature: CreatureEntity): CreatureEntity
+@Repository
+interface CreatureRepository : JpaRepository<CreatureEntity, Long> {
+
+    fun findByIsAdoptedFalse(): List<CreatureEntity>
 }
-

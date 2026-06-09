@@ -1,27 +1,29 @@
 package com.test.magicalhaven.server.service
 
 import com.test.magicalhaven.server.mapper.CreatureEntityMapper
-import com.test.magicalhaven.server.model.Creature
 import com.test.magicalhaven.server.repository.CreatureRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-class CreatureService(
+open class CreatureService(
     private val creatureRepository: CreatureRepository,
     private val creatureEntityMapper: CreatureEntityMapper
 ) {
-    fun getAllCreatures(): List<Creature> = creatureRepository.getAll()
-        .map(creatureEntityMapper::toDomain)
+    open fun getAllCreatures(): List<com.test.magicalhaven.server.model.Creature> =
+        creatureRepository.findAll()
+            .map { creatureEntityMapper.toDomain(it) }
 
-    fun getAvailableCreatures(): List<Creature> = creatureRepository.getAll()
-        .filter { !it.isAdopted }
-        .map(creatureEntityMapper::toDomain)
+    open fun getAvailableCreatures(): List<com.test.magicalhaven.server.model.Creature> =
+        creatureRepository.findByIsAdoptedFalse()
+            .map { creatureEntityMapper.toDomain(it) }
 
-    fun adoptCreature(id: Long): Creature? {
-        val entity = creatureRepository.findById(id)
+    @Transactional
+    open fun adoptCreature(id: Long): com.test.magicalhaven.server.model.Creature? {
+        val entity = creatureRepository.findById(id).orElse(null)
         if (entity != null && !entity.isAdopted) {
             entity.isAdopted = true
-            creatureRepository.update(entity)
+            creatureRepository.save(entity)
             return creatureEntityMapper.toDomain(entity)
         }
         return null

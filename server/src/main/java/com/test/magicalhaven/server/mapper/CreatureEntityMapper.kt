@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class CreatureEntityMapper {
+
     fun toDomain(entity: CreatureEntity): Creature = Creature(
         id = entity.id,
         name = entity.name,
@@ -28,4 +29,3 @@ class CreatureEntityMapper {
         isAdopted = domain.isAdopted
     )
 }
-
