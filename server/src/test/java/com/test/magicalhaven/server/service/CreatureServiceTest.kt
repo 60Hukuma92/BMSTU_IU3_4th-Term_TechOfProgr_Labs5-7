@@ -1,36 +1,112 @@
 package com.test.magicalhaven.server.service
 
-import org.junit.jupiter.api.Assertions.*
+import com.test.magicalhaven.server.mapper.CreatureEntityMapper
+import com.test.magicalhaven.server.model.Creature
+import com.test.magicalhaven.server.repository.CreatureRepository
+import com.test.magicalhaven.server.repository.entity.CreatureEntity
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
-import org.springframework.core.io.Resource
-import org.springframework.core.io.ResourceLoader
-import java.io.ByteArrayInputStream
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.*
+import org.mockito.junit.jupiter.MockitoExtension
+import java.math.BigDecimal
 
+@ExtendWith(MockitoExtension::class)
 class CreatureServiceTest {
 
+    @Mock
+    private lateinit var creatureRepository: CreatureRepository
+
+    @Mock
+    private lateinit var creatureEntityMapper: CreatureEntityMapper
+
+    @InjectMocks
+    private lateinit var creatureService: CreatureService
+
+    private lateinit var testEntity: CreatureEntity
+    private lateinit var testDomain: Creature
+
+    @BeforeEach
+    fun setUp() {
+        testEntity = CreatureEntity(
+            id = 1L,
+            name = "Test",
+            species = "TestSpecies",
+            temperament = "Calm",
+            dailyExpenses = BigDecimal("50.00"),
+            adoptionCost = BigDecimal("1000.00"),
+            magicalAbilities = listOf("TestAbility"),
+            isAdopted = false
+        )
+
+        testDomain = Creature(
+            id = 1L,
+            name = "Test",
+            species = "TestSpecies",
+            temperament = "Calm",
+            dailyExpenses = BigDecimal("50.00"),
+            adoptionCost = BigDecimal("1000.00"),
+            magicalAbilities = listOf("TestAbility"),
+            isAdopted = false
+        )
+    }
+
     @Test
-    fun `should load creatures from csv`() {
-        val resourceLoader = mock(ResourceLoader::class.java)
-        val resource = mock(Resource::class.java)
-        
-        val csvContent = """
-            id,name,species,temperament,dailyExpenses,adoptionCost,magicalAbilities,isAdopted
-            1,TestName,TestSpecies,TestTemp,10.0,20.0,"Ability1, Ability2",false
-        """.trimIndent()
-        
-        `when`(resourceLoader.getResource(anyString())).thenReturn(resource)
-        `when`(resource.exists()).thenReturn(true)
-        `when`(resource.inputStream).thenReturn(ByteArrayInputStream(csvContent.toByteArray()))
+    fun `getAllCreatures returns mapped list`() {
+        `when`(creatureRepository.findAll()).thenReturn(listOf(testEntity))
+        `when`(creatureEntityMapper.toDomain(testEntity)).thenReturn(testDomain)
 
-        val service = CreatureService(resourceLoader, "test.csv")
-        service.afterPropertiesSet()
+        val result = creatureService.getAllCreatures()
 
-        val creatures = service.getAllCreatures()
-        assertEquals(1, creatures.size)
-        assertEquals("TestName", creatures[0].name)
-        assertEquals(2, creatures[0].magicalAbilities.size)
+        assertEquals(1, result.size)
+        assertEquals(testDomain, result[0])
+    }
+
+    @Test
+    fun `getAvailableCreatures returns only not adopted`() {
+        `when`(creatureRepository.findByIsAdoptedFalse()).thenReturn(listOf(testEntity))
+        `when`(creatureEntityMapper.toDomain(testEntity)).thenReturn(testDomain)
+
+        val result = creatureService.getAvailableCreatures()
+
+        assertEquals(1, result.size)
+        assertEquals(false, result[0].isAdopted)
+    }
+
+    @Test
+    fun `adoptCreature updates entity and returns domain`() {
+        `when`(creatureRepository.findById(1L)).thenReturn(java.util.Optional.of(testEntity))
+        `when`(creatureEntityMapper.toDomain(testEntity)).thenReturn(testDomain)
+        `when`(creatureRepository.save(testEntity)).thenReturn(testEntity)
+
+        val result = creatureService.adoptCreature(1L)
+
+        assertNotNull(result)
+        assertEquals(true, testEntity.isAdopted)
+        verify(creatureRepository).save(testEntity)
+    }
+
+    @Test
+    fun `adoptCreature returns null when not found`() {
+        `when`(creatureRepository.findById(1L)).thenReturn(java.util.Optional.empty())
+
+        val result = creatureService.adoptCreature(1L)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `adoptCreature returns null when already adopted`() {
+        val adoptedEntity = testEntity.copy(isAdopted = true)
+        `when`(creatureRepository.findById(1L)).thenReturn(java.util.Optional.of(adoptedEntity))
+
+        val result = creatureService.adoptCreature(1L)
+
+        assertNull(result)
     }
 }

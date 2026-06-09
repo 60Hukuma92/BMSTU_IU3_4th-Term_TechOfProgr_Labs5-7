@@ -12,19 +12,24 @@ java {
 }
 
 dependencies {
-    // Spring Boot Starter
+    // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    // Swagger / OpenAPI support
+    // Kotlin — ОБЯЗАТЕЛЬНО:
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Database
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.liquibase:liquibase-core")
+
+    // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("org.postgresql:postgresql")
-    implementation("org.liquibase:liquibase-core")
 }
 
 tasks.withType<Test> {

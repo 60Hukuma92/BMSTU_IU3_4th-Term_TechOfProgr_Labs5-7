@@ -1,13 +1,14 @@
 package com.test.magicalhaven.server.dto
 
+import java.math.BigDecimal
+
 data class CreatureDto(
     val id: Long,
     val name: String,
     val species: String,
     val temperament: String,
-    val dailyExpenses: Double,
-    val adoptionCost: Double,
+    val dailyExpenses: BigDecimal,
+    val adoptionCost: BigDecimal,
     val magicalAbilities: List<String>,
-    val adopted: Boolean
+    val isAdopted: Boolean
 )
-

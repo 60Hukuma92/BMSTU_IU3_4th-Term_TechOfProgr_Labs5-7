@@ -1,32 +1,32 @@
 package com.test.magicalhaven.server.repository.entity
 
 import jakarta.persistence.*
-import java.sql.Array
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "creatures")
-data class CreatureEntity(
+class CreatureEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    var id: Long = 0,
 
     @Column(nullable = false)
-    var name: String,
+    var name: String = "",
 
     @Column(nullable = false)
-    var species: String,
+    var species: String = "",
 
     @Column(nullable = false)
-    var temperament: String,
+    var temperament: String = "",
 
-    @Column(name = "daily_expenses", nullable = false)
-    var dailyExpenses: Double,
+    @Column(name = "daily_expenses", nullable = false, precision = 10, scale = 2)
+    var dailyExpenses: BigDecimal = BigDecimal.ZERO,
 
-    @Column(name = "adoption_cost", nullable = false)
-    var adoptionCost: Double,
+    @Column(name = "adoption_cost", nullable = false, precision = 10, scale = 2)
+    var adoptionCost: BigDecimal = BigDecimal.ZERO,
 
     @Column(name = "magical_abilities", columnDefinition = "text[]")
-    var magicalAbilities: List<String>,
+    var magicalAbilities: List<String> = emptyList(),
 
     @Column(name = "is_adopted", nullable = false)
     var isAdopted: Boolean = false

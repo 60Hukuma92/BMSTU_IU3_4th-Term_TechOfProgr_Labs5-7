@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class CreatureDtoMapper {
+
     fun toDto(domain: Creature): CreatureDto = CreatureDto(
         id = domain.id,
         name = domain.name,
@@ -14,18 +15,6 @@ class CreatureDtoMapper {
         dailyExpenses = domain.dailyExpenses,
         adoptionCost = domain.adoptionCost,
         magicalAbilities = domain.magicalAbilities,
-        adopted = domain.isAdopted
-    )
-
-    fun toDomain(dto: CreatureDto): Creature = Creature(
-        id = dto.id,
-        name = dto.name,
-        species = dto.species,
-        temperament = dto.temperament,
-        dailyExpenses = dto.dailyExpenses,
-        adoptionCost = dto.adoptionCost,
-        magicalAbilities = dto.magicalAbilities,
-        isAdopted = dto.adopted
+        isAdopted = domain.isAdopted
     )
 }
-
