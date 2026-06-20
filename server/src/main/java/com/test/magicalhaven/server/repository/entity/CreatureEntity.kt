@@ -1,5 +1,6 @@
 package com.test.magicalhaven.server.repository.entity
 
+import com.test.magicalhaven.server.repository.converter.StringListConverter
 import jakarta.persistence.*
 import java.math.BigDecimal
 
@@ -25,9 +26,14 @@ class CreatureEntity(
     @Column(name = "adoption_cost", nullable = false, precision = 10, scale = 2)
     var adoptionCost: BigDecimal = BigDecimal.ZERO,
 
-    @Column(name = "magical_abilities", columnDefinition = "text[]")
+    @Column(name = "magical_abilities")
+    @Convert(converter = StringListConverter::class)
     var magicalAbilities: List<String> = emptyList(),
 
     @Column(name = "is_adopted", nullable = false)
-    var isAdopted: Boolean = false
+    var isAdopted: Boolean = false,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "player_id")
+    var owner: PlayerEntity? = null
 )

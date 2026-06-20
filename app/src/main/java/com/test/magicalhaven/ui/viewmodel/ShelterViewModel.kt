@@ -16,6 +16,8 @@ class ShelterViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ShelterUiState>(ShelterUiState.Loading)
     val uiState: StateFlow<ShelterUiState> = _uiState.asStateFlow()
 
+    private var currentUsername: String = ""
+
     init {
         loadCatalog()
     }
@@ -28,23 +30,35 @@ class ShelterViewModel @Inject constructor(
         }
     }
 
-    fun attemptBinding(visitorName: String, budget: Double, creatureId: String) {
+    fun loginAndAdopt(visitorName: String, creatureId: String) {
         viewModelScope.launch {
-            val creature = repo.getCreatureById(creatureId)
-            if (creature == null) {
-                _uiState.value = ShelterUiState.Error("Creature not found")
-                return@launch
-            }
-
-            if (budget >= creature.dailyExpenses) {
-                val success = repo.removeCreatureById(creatureId)
-                if (success) {
-                    _uiState.value = ShelterUiState.Success("Contract signed for ${creature.name}!")
+            _uiState.value = ShelterUiState.Loading
+            currentUsername = visitorName
+            
+            // 1. Авторизуемся (получаем JWT)
+            val loggedIn = repo.login(visitorName, "password")
+            if (loggedIn) {
+                // 2. Проверяем информацию об игроке (баланс)
+                val player = repo.getPlayerInfo()
+                val creature = repo.getAllCreatures().find { it.id == creatureId }
+                
+                if (player != null && creature != null) {
+                    if (player.balance >= creature.adoptionCost) {
+                        // 3. Усыновляем
+                        val success = repo.removeCreatureById(creatureId)
+                        if (success) {
+                            _uiState.value = ShelterUiState.Success("Successfully bound to \${creature.name}!")
+                        } else {
+                            _uiState.value = ShelterUiState.Error("Server rejected adoption. Maybe not enough gold?")
+                        }
+                    } else {
+                        _uiState.value = ShelterUiState.Error("Insufficient balance: \${player.balance} gold. Need \${creature.adoptionCost} for \${creature.name}")
+                    }
                 } else {
-                    _uiState.value = ShelterUiState.Error("Failed to adopt creature on server")
+                    _uiState.value = ShelterUiState.Error("Creature or Player info not found.")
                 }
             } else {
-                _uiState.value = ShelterUiState.Error("Insufficient budget: ${creature.dailyExpenses} gold required")
+                _uiState.value = ShelterUiState.Error("Authentication failed.")
             }
         }
     }
@@ -52,14 +66,24 @@ class ShelterViewModel @Inject constructor(
     fun showStatistics() {
         viewModelScope.launch {
             _uiState.value = ShelterUiState.Loading
-            val total = repo.getAvailableCount()
-            val adopted = repo.getAdoptedCount()
-            val popular = repo.getMostPopularSpecies()
             _uiState.value = ShelterUiState.Statistics(
-                total = total,
-                adopted = adopted,
-                popular = popular
+                total = repo.getAvailableCount(),
+                adopted = repo.getAdoptedCount(),
+                popular = repo.getMostPopularSpecies()
             )
+        }
+    }
+
+    fun showMyCreatures(visitorName: String) {
+        viewModelScope.launch {
+            _uiState.value = ShelterUiState.Loading
+            repo.login(visitorName, "password") 
+            val player = repo.getPlayerInfo()
+            if (player != null) {
+                _uiState.value = ShelterUiState.MyCollection(player.adoptedCreatures, player.balance)
+            } else {
+                _uiState.value = ShelterUiState.Error("Could not fetch player info for \${visitorName}")
+            }
         }
     }
 }

@@ -14,4 +14,5 @@ sealed class ShelterUiState {
         val adopted: Int,
         val popular: String?
     ) : ShelterUiState()
+    data class MyCollection(val creatures: List<Creature>, val balance: Double) : ShelterUiState()
 }

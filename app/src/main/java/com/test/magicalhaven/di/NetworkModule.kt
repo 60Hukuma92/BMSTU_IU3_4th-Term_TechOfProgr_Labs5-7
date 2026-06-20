@@ -1,7 +1,6 @@
 package com.test.magicalhaven.di
 
-import com.test.magicalhaven.data.remote.CreatureApiService
-import com.test.magicalhaven.data.remote.StatusApiService
+import com.test.magicalhaven.data.remote.*
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -15,12 +14,17 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideAuthInterceptor(): AuthInterceptor = AuthInterceptor()
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addInterceptor(authInterceptor)
             .build()
     }
 
@@ -28,7 +32,7 @@ class NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/") // Special IP for Android Emulator to access localhost
+            .baseUrl("http://10.0.2.2:8080/") 
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -44,5 +48,17 @@ class NetworkModule {
     @Singleton
     fun provideStatusApiService(retrofit: Retrofit): StatusApiService {
         return retrofit.create(StatusApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayerApiService(retrofit: Retrofit): PlayerApiService {
+        return retrofit.create(PlayerApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApiService(retrofit: Retrofit): AuthApiService {
+        return retrofit.create(AuthApiService::class.java)
     }
 }

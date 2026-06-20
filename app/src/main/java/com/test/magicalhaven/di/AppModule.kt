@@ -4,7 +4,7 @@ import android.content.Context
 import com.test.magicalhaven.data.repository.CreatureRepository
 import com.test.magicalhaven.data.repository.CreatureRepositoryImpl
 import com.test.magicalhaven.data.repository.RemoteCreatureRepositoryImpl
-import com.test.magicalhaven.data.remote.CreatureApiService
+import com.test.magicalhaven.data.remote.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -14,7 +14,7 @@ class AppModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun provideContext(): Context { // Context 4 Dagger
+    fun provideContext(): Context { 
         return context
     }
 
@@ -28,12 +28,14 @@ class AppModule(private val context: Context) {
     @Singleton
     fun provideCreatureRepository(
         context: Context,
-        apiService: CreatureApiService
+        apiService: CreatureApiService,
+        playerApiService: PlayerApiService,
+        authApiService: AuthApiService,
+        authInterceptor: AuthInterceptor
     ): CreatureRepository {
-        //switch between Local and Remote for the demo
         val useRemote = true 
         return if (useRemote) {
-            RemoteCreatureRepositoryImpl(apiService)
+            RemoteCreatureRepositoryImpl(apiService, playerApiService, authApiService, authInterceptor)
         } else {
             CreatureRepositoryImpl(context)
         }

@@ -7,14 +7,14 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface CreatureApiService {
-    @GET("api/v1/shelter/creatures/available")
+    @GET("api/v2/creatures/available")
     suspend fun getAvailableCreatures(): List<Creature>
 
-    @POST("api/v1/shelter/creatures/{id}/adopt")
+    @POST("api/v2/creatures/{id}/adopt")
     suspend fun adoptCreature(@Path("id") id: String): Creature
 }
 
 interface StatusApiService {
-    @GET("api/v1/status")
+    @GET("api/v2/status")
     suspend fun getStatus(): Map<String, String>
 }

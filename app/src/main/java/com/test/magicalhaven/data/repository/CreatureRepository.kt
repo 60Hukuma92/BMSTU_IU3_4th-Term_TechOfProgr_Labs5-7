@@ -9,4 +9,7 @@ interface CreatureRepository {
     suspend fun getAvailableCount(): Int
     suspend fun getAdoptedCount(): Int
     suspend fun getMostPopularSpecies(): String?
+    suspend fun getMyCreatures(): List<Creature>
+    suspend fun getPlayerInfo(): com.test.magicalhaven.domain.model.Player?
+    suspend fun login(username: String, password: String): Boolean
 }

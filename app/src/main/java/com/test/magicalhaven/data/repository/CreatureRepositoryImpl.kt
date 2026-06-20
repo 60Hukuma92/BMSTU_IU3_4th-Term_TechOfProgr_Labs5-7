@@ -81,4 +81,10 @@ class CreatureRepositoryImpl(
         creatures.groupBy { it.species }
             .maxByOrNull { it.value.size }?.key
     }
+
+    override suspend fun getMyCreatures(): List<Creature> = emptyList()
+
+    override suspend fun getPlayerInfo(): com.test.magicalhaven.domain.model.Player? = null
+
+    override suspend fun login(username: String, password: String): Boolean = true
 }

@@ -3,12 +3,12 @@ package com.test.magicalhaven.server.model
 import java.math.BigDecimal
 
 data class Creature(
-    val id: Long,
-    val name: String,
-    val species: String,
-    val temperament: String,
-    val dailyExpenses: BigDecimal,
-    val adoptionCost: BigDecimal,
-    val magicalAbilities: List<String>,
-    val isAdopted: Boolean
+    val id: Long = 0,
+    val name: String = "",
+    val species: String = "",
+    val temperament: String = "",
+    val dailyExpenses: BigDecimal = BigDecimal.ZERO,
+    val adoptionCost: BigDecimal = BigDecimal.ZERO,
+    val magicalAbilities: List<String> = emptyList(),
+    val isAdopted: Boolean = false
 )

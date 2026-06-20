@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: ai
+      changes:
+        - createTable:
+            tableName: players
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: balance
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: creatures
+            columns:
+              - column:
+                  name: player_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_creature_player
+                    referencedTableName: players
+                    referencedColumnNames: id

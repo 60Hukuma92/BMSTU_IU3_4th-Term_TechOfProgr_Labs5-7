@@ -16,6 +16,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
 
     // Kotlin — ОБЯЗАТЕЛЬНО:
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
@@ -24,6 +30,7 @@ dependencies {
     // Database
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.liquibase:liquibase-core")
+    testImplementation("com.h2database:h2")
 
     // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
